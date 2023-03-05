@@ -10,14 +10,17 @@
 </head>
 
 <body>
-    <button >点击测试</button>
+    <div class="niuma"></div>
+    <button>点击测试</button>
 </body>
 <script>
-    let btn=document.querySelector("button")
-    function test(){
+    let btn = document.querySelector("button")
+    let niuma = document.querySelector(".niuma");
+    function test() {
         console.info("sb")
+        niuma.append(".");
     }
-    btn.addEventListener("click",throttle_timestamp(test,2000))
+    btn.addEventListener("click", throttle_timestamp(test, 2000))
 </script>
 
 </html>

@@ -31,7 +31,9 @@ Function.prototype._bind = function (target) {
         fn.call(this instanceof bindClone?fn:target,args1.concat(args2));
     }
     let Bar = function () { }
-    Bar.prototype = bindClone.prototype;
+    Bar.prototype = fn.prototype;
+    //为什么要将bindClone.prototype不直接指向fn.prototype呢
+    //这是为了防止如果对bindClone.prototype直接修改，然后对fn.prototype造成影响
     bindClone.prototype = new Bar();
     return bindClone;
 }

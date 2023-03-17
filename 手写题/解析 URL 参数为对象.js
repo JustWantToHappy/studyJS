@@ -19,4 +19,4 @@ function parseURLParams(url) {
     })
     return obj;
 }
-console.info(parseURLParams("https://localhost:8080/url/?name=niuma&age=12.900&sb="));
+console.info(parseURLParams("https://localhost:8080/url/?name=niuma&age=12.900&sb=dfsdf"));

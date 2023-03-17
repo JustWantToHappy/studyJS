@@ -31,7 +31,7 @@ console.log(q.color);//[ 'black', 'yellow', 'white', 'sb' ]
  */
 function Animal(name) {
     this.name = name;
-    console.log("hhh")
+    console.log("hhh");
     this.say = () => {
         console.info(this.name);
     }
@@ -39,8 +39,9 @@ function Animal(name) {
 function Dog(name) {
     Animal.call(this,name);//使用了这条语句之后Animal中的this就是Dog实例了
 }
-let dog=new Dog("hhh")
-dog.say()
+let dog = new Dog("hhh");
+dog.say();
+
 
 /**
  * @desc 组合继承

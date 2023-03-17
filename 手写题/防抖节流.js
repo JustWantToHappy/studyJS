@@ -1,5 +1,5 @@
 //防抖
-const debouce = function (fn,delay) {
+const debouce_easy = function (fn,delay) {
     let timer = null;
     return function () {
         let args = arguments;
@@ -11,6 +11,10 @@ const debouce = function (fn,delay) {
             fn.apply(that, args);
         }, delay);
     }
+}
+//防抖高级写法
+const debouce_advanced = function (fn, delay) {
+    
 }
 /**
  * @desc 节流的多种写法

@@ -1,3 +1,9 @@
+/**
+ * 注意事项：防抖节流不建议使用箭头函数，因为返回的函数需要访问外部的变量或对象，
+ * 而箭头函数的 this 绑定是固定的、无法更改的，可能导致 this 绑定不正确。
+ */
+
+
 //防抖
 const debouce_easy = function (fn, delay) {
     let timer = null;
@@ -37,7 +43,7 @@ const debouce_advanced = function (fn, delay, immediate = false) {
             if (callNow) result = fn.apply(that, args);
         } else {
             timer = setTimeout(() => {
-                fn.apply(that, args);
+                result = fn.apply(that, args);
             }, delay);
         }
         return result;
@@ -95,4 +101,48 @@ const throttle_timestamp = function (fn, delay) {
         }, delay);
     }
     return throttleFunc;
+}
+
+/**
+ * 高级节流函数
+ * @param {Function} fn - 要进行节流的函数
+ * @param {number} delay - 节流频率
+ * @param {{leading:boolean,trailing:boolean}} options - leading表示可以立即执行一次
+ * trailing表示结束调用的时候是否还要调用一次(也就是节流取消的时候)
+ */
+const throttle_advanced = function (fn, delay, options = { leading: true, trailing: true }) {
+    var timer = result = context = args = null;
+    var previousTime = 0;
+
+
+    const { leading, trailing } = options || {};
+
+    const throttled = function () {
+        context = this;
+        args = arguments;
+        const currentTime = new Date().getTime();
+        const remaining = delay - (currentTime - previousTime);
+
+        if (remaining < 0) {
+            if (timer) {
+                clearTimeout(timer);
+                timer = null;
+            }
+            previousTime = currentTime;
+            fn.apply(context, args);
+            
+        } else if (trailing !== false) {
+            //如果函数在等待时间内被调用了多次，则只会执行最后一次调用，并立即返回结果
+
+
+        }
+    }
+    //取消节流
+    throttled.cancle = function () {
+        clearTimeout(timer);//取消当前节流函数的定时器
+        //重置计时器状态
+        previousTime = 0;
+        timer = null;
+    }
+    return throttled;
 }

@@ -36,17 +36,21 @@ const debouce_advanced = function (fn, delay, immediate = false) {
         if (immediate) {
             //只有当timer是null的时候才会立即执行
             var callNow = !timer;
+            if (callNow) result = fn.apply(that, args);
             //已经执行过了，让timer不为null
             timer = setTimeout(() => {
                 timer = null;//当delay过去之后，设置timer为null
             }, delay);
-            if (callNow) result = fn.apply(that, args);
         } else {
             timer = setTimeout(() => {
                 result = fn.apply(that, args);
             }, delay);
         }
         return result;
+    }
+    debouced.cancle = function () {
+        clearTimeout(timer);
+        timer = null;
     }
     return debouced;
 }
@@ -105,6 +109,7 @@ const throttle_timestamp = function (fn, delay) {
 
 /**
  * 高级节流函数
+ * @desc 这个函数确实还是没有搞懂。。。
  * @param {Function} fn - 要进行节流的函数
  * @param {number} delay - 节流频率
  * @param {{leading:boolean,trailing:boolean}} options - leading表示可以立即执行一次
@@ -115,29 +120,37 @@ const throttle_advanced = function (fn, delay, options = { leading: true, traili
     var previousTime = 0;
 
 
-    const { leading, trailing } = options || {};
+    const { leading, trailing } = options;
 
     const throttled = function () {
         context = this;
         args = arguments;
         const currentTime = new Date().getTime();
+        //表示第一次执行节流函数不立即执行，因为remaing=wait
+        if (!previousTime && leading === false) previousTime = currentTime;
         const remaining = delay - (currentTime - previousTime);
-
-        if (remaining < 0) {
+        if (remaining <= 0) {
             if (timer) {
                 clearTimeout(timer);
                 timer = null;
             }
             previousTime = currentTime;
             fn.apply(context, args);
-            
-        } else if (trailing !== false) {
-            //如果函数在等待时间内被调用了多次，则只会执行最后一次调用，并立即返回结果
-
-
+            //避免内存泄漏，因为每次执行节流函数都会创建一个throttled函数
+            if (!timer) context = args = null;
+        } else if (!timer && trailing !== false) {
+            timer = setTimeout(() => {
+                previousTime = leading === false ? 0 : new Date().getTime();
+                timer = null;
+                fn.apply(context, args);
+                if (!timer) context = args = null;
+            }, remaining);
         }
     }
-    //取消节流
+    /**
+     * 这个函数并不是说使用之后，以后每次触发都不会有节流效果了，而是指的是如本次节流周期中，如果调用cancle
+     * 就会重新开始下一轮节流
+     */
     throttled.cancle = function () {
         clearTimeout(timer);//取消当前节流函数的定时器
         //重置计时器状态

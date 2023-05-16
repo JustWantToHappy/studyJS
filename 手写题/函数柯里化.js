@@ -19,8 +19,17 @@ function sum(a, b, c) {
 //实现函数柯里化
 function curry(fn) {
   let judeg = (...args) => {
+    //递归的出口，如果调用的实参的个数之和等于fn的形参的个数，就直接传入参数并且调用fn
     if (args.length === fn.length) return fn(...args);
     return (...arg) => judeg(...args, ...arg);
+    /**
+     * 等价于:
+     * return (...arg1)=>{
+     *  return (...arg2)=>{
+     *  ...
+     * }
+     * }
+     */
   }
   return judeg;
 }
@@ -28,3 +37,9 @@ const carriedsum = curry(sum);
 console.info(carriedsum(1)(2, 3));
 console.info(carriedsum(1, 2)(3));
 console.info(carriedsum(1, 2, 3));
+//print result:6 6 6
+/**
+ * print result:[Function (anonymous)]
+ * 这是因为参数没有满足fn,上面结果都打印了，这是因为上面的实参数量满足了，
+ */
+console.info(carriedsum(1)(2)) 

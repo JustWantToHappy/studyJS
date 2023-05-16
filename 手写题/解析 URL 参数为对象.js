@@ -1,5 +1,6 @@
 function parseURLParams(url) {
-    let reg = /\/\?(.+)$/
+    let reg = /[\?\&](.+)$/
+    console.info(url.match(reg), 'test');
     let arr = url.match(reg)[1].split("&");
     let obj = new Object();
     arr?.forEach(str => {

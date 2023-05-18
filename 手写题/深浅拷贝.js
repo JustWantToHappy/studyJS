@@ -106,40 +106,32 @@ function BFSDeepColone(target) {
         const currentObj = queue.shift();
         let copy = copy_queue.shift();
         let type = getType(currentObj);
-        switch (type) {
-            case "Object" || "Array":
-                for (let prop in currentObj) {
-                    let value = currentObj[prop];
-                    let type = getType(value);
-                    if (type === "Object") {
-                        //如果触发循环依赖
-                        if (map.get(value)) {
-                            copy[prop] = value;
-                            map.set(copy, true);
-                        } else {
-                            copy[prop] = {};
-                            queue.push(value);
-                            copy_queue.push(copy[prop]);
-                        }
-                    } else if (type === "Array") {
-                        copy[prop] = [];
+        if (type === "Object" || type === "Array") {
+            for (let prop in currentObj) {
+                let value = currentObj[prop];
+                let type = getType(value);
+                if (type === "Object" || type === "Array") {
+                    //如果触发循环依赖
+                    if (map.get(value)) {
+                        copy[prop] = value;
+                        map.set(copy, true);
+                    } else {
+                        copy[prop] = type === "Array" ? [] : {};
                         queue.push(value);
                         copy_queue.push(copy[prop]);
-                    } else if (type === "Function") {
-                        copy[prop] = eval("(" + value.toString() + ")");
-                    } else {
-                        copy[prop] = value;
                     }
+                } else if (type === "Function") {
+                    copy[prop] = eval("(" + value.toString() + ")");
+                } else {
+                    copy[prop] = value;
                 }
-                break;
-            case "Function":
-                copyObj = eval("(" + currentObj.toString() + ")");
-                break;
-            default:
-                copyObj = currentObj;
-                break;
+            }
+        } else if (type === "Function") {
+            copyObj = eval("(" + currentObj.toString() + ")");
+        } else {
+            copyObj = currentObj;
         }
     }
     return copyObj;
 }
-console.info(BFSDeepColone({name:"dfsdfs",age:{dsfsdf:2423}}))
+console.info(BFSDeepColone({ name: "dfsdfs", age: { dsfsdf: 2423, sdfds: [1, 2, 3] } }))

@@ -86,3 +86,7 @@ segmentTire.modifyInterval(3, 5, 2);
 console.info(segmentTire.tree)
 console.info(segmentTire.search(3,4))
 console.info(segmentTire.tree)
+
+let sb=new SegmentTire([9,-8])
+sb.build();
+console.info(sb.tree)

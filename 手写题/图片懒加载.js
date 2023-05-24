@@ -3,33 +3,33 @@
  * @desc 图片全部加载完毕之后移除事件监听
  */
 
-let imgList = [...document.querySelector("img")];
-let length = imglist.length;
+let imgList = [...document.querySelectorAll("img")];
 
-function handleImageLazyLoad() {
-    let imgLoadingState = [];
-    for (let i = 0; i < length; i++){
-        let img = imgList[i];
-        let rect = img.getBoundingClientRect();
-        imgLoadingState.push(new Promise((resolve, reject) => {
-            let proxyImage = new Image();
-            proxyImage.src = img.getAttribute("data-src");
-            proxyImage.onload = function () {
-                if (rect.top >= 0 && rect.top - document.body.clientHeight < 0) {
-                    img.src = img.getAttribute("data-src");
-                    resolve("finished");
+//使用IIFE表达式，实现单例，也为了使代码更加优美
+const handleImageLazyLoad = function () {
+    const height = window.innerHeight || document.documentElement.clientHeight;
+    let count = 0, length = imgList.length;
+    
+    return function () {
+        let deletesImgs = [];
+        for (let i = 0; i < imgList.length; i++) {
+            let img = imgList[i];
+            let realSrc = img.getAttribute("data-src");
+            let rect = img.getBoundingClientRect();
+            const { top } = rect;
+            if (top >= 0 && top <= height) {
+                img.src = realSrc;
+                deletesImgs.push(i);
+                count++;
+                if (count === length) {
+                    console.info("全部图片加载完毕...");
+                    document.removeEventListener("scroll", handleImageLazyLoad);
                 }
             }
-            proxyImage.onerror = function () {
-                reject("failed");
-            }
-        }))
+        }
+        //移出已经加载完毕或者加载失败的图片元素,目的是为了优化内存
+        imgList = imgList.filter((_, index) => !deletesImgs.includes(index));
     }
-}
-Promise.all(imgList).then(res => {
-    console.info(res);    
-}).catch(err => {
-}).finally(() => {
-    document.removeEventListener("scroll", handleImageLazyLoad);
-})
-document.addEventListener("scroll", handleImageLazyLoad());
+}();
+
+document.addEventListener("scroll", handleImageLazyLoad);

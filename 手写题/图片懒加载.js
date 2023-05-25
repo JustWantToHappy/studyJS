@@ -9,14 +9,14 @@ let imgList = [...document.querySelectorAll("img")];
 const handleImageLazyLoad = function () {
     const height = window.innerHeight || document.documentElement.clientHeight;
     let count = 0, length = imgList.length;
-    
+
     return function () {
         let deletesImgs = [];
         for (let i = 0; i < imgList.length; i++) {
             let img = imgList[i];
             let realSrc = img.getAttribute("data-src");
             let rect = img.getBoundingClientRect();
-            const { top } = rect;
+            const { top, bottom } = rect;
             if (top >= 0 && top <= height) {
                 img.src = realSrc;
                 deletesImgs.push(i);

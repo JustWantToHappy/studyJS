@@ -37,7 +37,7 @@ function Animal(name) {
     }
 }
 function Dog(name) {
-    Animal.call(this,name);//使用了这条语句之后Animal中的this就是Dog实例了
+    Animal.call(this, name);
 }
 let dog = new Dog("hhh");
 dog.say();
@@ -53,11 +53,11 @@ Man.prototype.say = function () {
     console.log("your name is " + this.name);
 }
 function Boy(name) {
-    Man.call(this,name);
+    Man.call(this, name);
 }
 Boy.prototype = new Man();
 Boy.prototype.construtor = Boy;
-let boy=new Boy('zzz')
+let boy = new Boy('zzz')
 boy.say();
 
 /**
@@ -81,3 +81,4 @@ F.prototype = Car.prototype;
 let f = new F();
 f.construtor = Bus;
 Bus.prototype = f;
+

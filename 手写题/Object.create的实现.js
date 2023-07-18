@@ -16,4 +16,5 @@ Object.mycreate = function (proto, propertiesObject = undefined) {
   return obj;
 }
 
-let obj = Object.mycreate({ name: "sb" });
+let obj = Object.mycreate({ name: "sb" }, { age: { writable: true, value: 12, enumerable: true } });
+console.info(obj)

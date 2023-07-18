@@ -8,13 +8,11 @@
 const debouce_easy = function (fn, delay) {
     let timer = null;
     return function () {
-        let args = arguments;
-        let that = this;
         if (timer) {
             clearTimeout(timer);
         }
         timer = setTimeout(() => {
-            fn.apply(that, args);
+            fn.apply(this, Array.prototype.slice.call(arguments, 0));
         }, delay);
     }
 }
@@ -31,7 +29,7 @@ const debouce_easy = function (fn, delay) {
 const debouce_advanced = function (fn, delay, immediate = false) {
     var timer = result = null;
     var debouced = function () {
-        const that = this, args = arguments;
+        const that = this, args = Array.from(arguments);
         if (timer) clearTimeout(timer);
         if (immediate) {
             //只有当timer是null的时候才会立即执行
@@ -64,7 +62,7 @@ const throttle_flag = function (fn, delay) {
     let flag = false;
     let throttleFunc = function () {
         let that = this;
-        let args = arguments;
+        let args = Array.from(arguments);
         if (flag) {
             return;
         }
@@ -80,7 +78,7 @@ const throttle_flag = function (fn, delay) {
 const throttle_timer = function (fn, delay) {
     let timer = null;
     let throttltFunc = function () {
-        let args = arguments, that = this;
+        let args = Array.from(arguments), that = this;
         if (timer) {
             return;
         }
@@ -93,10 +91,10 @@ const throttle_timer = function (fn, delay) {
 }
 //第三种方式:使用时间戳
 const throttle_timestamp = function (fn, delay) {
-    let start = Date.now();
+    let start = null;
     let throttleFunc = function () {
-        let that = this, args = arguments;
-        if (Date.now() - start < delay) {
+        let that = this, args = Array.from(arguments);
+        if (typeof start === 'number' && Date.now() - start < delay) {
             return;
         }
         start = Date.now();
@@ -105,57 +103,4 @@ const throttle_timestamp = function (fn, delay) {
         }, delay);
     }
     return throttleFunc;
-}
-
-/**
- * 高级节流函数
- * @desc 这个函数确实还是没有搞懂。。。
- * @param {Function} fn - 要进行节流的函数
- * @param {number} delay - 节流频率
- * @param {{leading:boolean,trailing:boolean}} options - leading表示可以立即执行一次
- * trailing表示结束调用的时候是否还要调用一次(也就是节流取消的时候)
- */
-const throttle_advanced = function (fn, delay, options = { leading: true, trailing: true }) {
-    var timer = result = context = args = null;
-    var previousTime = 0;
-
-
-    const { leading, trailing } = options;
-
-    const throttled = function () {
-        context = this;
-        args = arguments;
-        const currentTime = new Date().getTime();
-        //表示第一次执行节流函数不立即执行，因为remaing=wait
-        if (!previousTime && leading === false) previousTime = currentTime;
-        const remaining = delay - (currentTime - previousTime);
-        if (remaining <= 0) {
-            if (timer) {
-                clearTimeout(timer);
-                timer = null;
-            }
-            previousTime = currentTime;
-            fn.apply(context, args);
-            //避免内存泄漏，因为每次执行节流函数都会创建一个throttled函数
-            if (!timer) context = args = null;
-        } else if (!timer && trailing !== false) {
-            timer = setTimeout(() => {
-                previousTime = leading === false ? 0 : new Date().getTime();
-                timer = null;
-                fn.apply(context, args);
-                if (!timer) context = args = null;
-            }, remaining);
-        }
-    }
-    /**
-     * 这个函数并不是说使用之后，以后每次触发都不会有节流效果了，而是指的是如本次节流周期中，如果调用cancle
-     * 就会重新开始下一轮节流
-     */
-    throttled.cancle = function () {
-        clearTimeout(timer);//取消当前节流函数的定时器
-        //重置计时器状态
-        previousTime = 0;
-        timer = null;
-    }
-    return throttled;
 }

@@ -1,6 +1,6 @@
 //接口类
 class Shape {
-  acept(visitor) { };
+  acept() { };
 }
 
 class Circle extends Shape {
@@ -12,7 +12,6 @@ class Circle extends Shape {
     visitor.visitCircle(this);
   }
 }
-
 
 class Rectangle extends Shape {
   constructor(width, height) {

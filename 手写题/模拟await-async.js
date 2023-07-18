@@ -29,12 +29,12 @@ function generatorToAsync(generatorFn) {
         return new Promise((resolve, reject) => {
             /**
              * 
-             * @param {} key 
+             * @desc 自动执行器
              * @param {可选参数,调用next()方法时传递的参数} arg 
              * @desc step的作用就是依次执行"Generator"中的代码
              * @desc 每次执行完一段代码都会调用next()方法
              */
-            function step(key,arg) {
+            function step(key, arg) {
                 let generatorResult;
                 try {
                     //执行一次迭代对象的next方法,返回一个对象{value:"xxx",done:boolean}

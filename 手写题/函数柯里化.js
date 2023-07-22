@@ -38,8 +38,3 @@ console.info(carriedsum(1)(2, 3));
 console.info(carriedsum(1, 2)(3));
 console.info(carriedsum(1, 2, 3));
 //print result:6 6 6
-/**
- * print result:[Function (anonymous)]
- * 这是因为参数没有满足fn,上面结果都打印了，这是因为上面的实参数量满足了，
- */
-console.info(carriedsum(1)(2)) 

@@ -22,7 +22,14 @@ function shallowCopy(obj) {
     return shallowObj;
 }
 
-//使用JSON对象的stringify和parse实现深拷贝
+/**
+ * @desc 使用JSON对象的stringify和parse实现深拷贝
+ * @desc 使用JSON.stringify和JSON.parse的方法来实现深拷贝有如下缺点:
+ * 1. 无法处理特殊的对象类型：函数，RegExp，Date等
+ * 2. 原型链上的属性和方法会丢失
+ * 3. 循环引用问题，如果对象中存在循环引用，使用JSON.stringify()就会抛出错误
+ * 4. 性能问题,JSON.stringify和JSON.parse在处理大型对象的时候性能会很低
+ */
 const shallowObj3 = JSON.parse(JSON.stringify(obj));
 
 //简易版深拷贝(dfs版本)，不考虑内置对象和函数
@@ -96,6 +103,9 @@ function DFSdeepClone(target, map = new WeakMap()) {
     }
 }
 
+const originObj = { name: "dfsdfs", age: { dsfsdf: 2423, sdfds: [1, 2, 3] } };
+console.info(dfs_deep_copy(originObj), dfs_deep_copy(originObj) === originObj)
+
 //深拷贝bfs完全版本
 function BFSDeepColone(target) {
     let queue = [target];
@@ -134,4 +144,5 @@ function BFSDeepColone(target) {
     }
     return copyObj;
 }
-console.info(BFSDeepColone({ name: "dfsdfs", age: { dsfsdf: 2423, sdfds: [1, 2, 3] } }))
+console.info(BFSDeepColone(originObj), BFSDeepColone([1, { name: "sb" }]))
+

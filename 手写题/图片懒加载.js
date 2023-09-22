@@ -18,7 +18,7 @@ const handleImageLazyLoad = function () {
             let rect = img.getBoundingClientRect();
             const { top } = rect;
             if (top >= 0 && top <= height) {
-                img.src = realSrc;
+                img.src = realSrc;  
                 deletesImgs.push(i);
                 count++;
                 if (count === length) {

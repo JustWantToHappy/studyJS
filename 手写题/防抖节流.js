@@ -2,8 +2,6 @@
  * 注意事项：防抖节流不建议使用箭头函数，因为返回的函数需要访问外部的变量或对象，
  * 而箭头函数的 this 绑定是固定的、无法更改的，可能导致 this 绑定不正确。
  */
-
-
 //防抖
 const debouce_easy = function (fn, delay) {
     let timer = null;
@@ -90,17 +88,15 @@ const throttle_timer = function (fn, delay) {
     return throttltFunc;
 }
 //第三种方式:使用时间戳
-const throttle_timestamp = function (fn, delay) {
-    let start = null;
-    let throttleFunc = function () {
-        let that = this, args = Array.from(arguments);
-        if (typeof start === 'number' && Date.now() - start < delay) {
-            return;
+function throttle_timestamp(fn, delay) {
+    let prevTime = 0
+    return function (...args) {
+        let result;
+        const curTime = new Date().getTime()
+        if (curTime - prevTime > delay) {
+            result = fn.call(this, ...args)
+            prevTime = curTime;
         }
-        start = Date.now();
-        setTimeout(() => {
-            fn.apply(that, args);
-        }, delay);
+        return result;
     }
-    return throttleFunc;
 }

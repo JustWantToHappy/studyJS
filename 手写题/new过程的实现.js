@@ -6,4 +6,3 @@ function toNew(fn, ...args) {
     //如果fn的构造函数中返回了一个对象
     return typeof result === "obejct" ? result : fnPrototype;
 }
-

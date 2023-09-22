@@ -8,7 +8,7 @@ let drr = [...arr];
 let err = [...arr];
 let frr = [...arr];
 
-//第一种方式:使用内置flat方法
+//第一种方式:使用内置flat方法 
 let arrFlat = arr.flat(Infinity);
 
 //第二种方式，递归

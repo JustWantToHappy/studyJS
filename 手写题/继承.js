@@ -21,6 +21,7 @@ function Chinese() {
 }
 Chinese.prototype = new People();
 let p = new Chinese();
+p.eat()
 p.color.push("sb")
 let q = new Chinese();
 console.log(q.color);//[ 'black', 'yellow', 'white', 'sb' ]
@@ -39,7 +40,7 @@ function Animal(name) {
 function Dog(name) {
     Animal.call(this, name);
 }
-let dog = new Dog("hhh");
+let dog = new Dog("马老师");
 dog.say();
 
 
@@ -81,4 +82,5 @@ F.prototype = Car.prototype;
 let f = new F();
 f.construtor = Bus;
 Bus.prototype = f;
+
 

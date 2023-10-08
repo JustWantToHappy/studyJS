@@ -9,9 +9,7 @@ function myInstanceof(obj, fn) {
         //objPrototype = Object.getPrototypeOf(objPrototype);
         objPrototype = objPrototype.__proto__;
     }
-    return objPrototype === null ? false : true;
+    return !objPrototype === null 
 }
-
 console.info(myInstanceof([], Object));
 console.info(myInstanceof([], Array));
-

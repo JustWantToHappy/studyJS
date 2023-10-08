@@ -1,5 +1,6 @@
 /**
  * 如果需要测试Promise，需要安装插件promises-aplus-tests
+ * 运行测试:npx promises-aplus-tests 文件名
  */
 
 function isObject(argument) {
@@ -110,7 +111,7 @@ class Promise {
 
     return promise2;
   }
-
+  
   static resolvePromise(promise2, x, resolve, reject) {
     if (promise2 === x) { // 如果 x 和 promise2 相当，代表是有循环
       reject(new TypeError('Circling Chain detected in resolve promise'))
@@ -156,4 +157,6 @@ Promise.defer = Promise.deferred = function () {
   })
   return dfd
 }
+
+
 module.exports = Promise

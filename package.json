@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/JustWantToHappy/studyJS#readme",
   "dependencies": {
+    "net": "^1.0.2",
     "promises-aplus-tests": "^2.1.2"
   }
 }

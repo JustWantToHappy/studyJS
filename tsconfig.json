@@ -1,5 +1,6 @@
 {
 	"compilerOptions": {
+		"experimentalDecorators": true,
 		"allowJs": true, // 允许 JavaScript 文件
 	}
 }

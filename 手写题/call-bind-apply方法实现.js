@@ -8,13 +8,14 @@ Function.prototype._call = function (context, ...args) {
     delete context[key];
     return result;
 }
+
 //apply方法的实现
-Function.prototype._apply = function (context, args) {
+Function.prototype._apply = function (context, ...args) {
     context = typeof context !== "object" ? window : context;
     //避免原有属性被覆盖
     const key = Symbol();
     context[key] = this;
-    const result = context[key](...args);
+    const result = context[key](args);
     delete context[key];
     return result;
 }
@@ -27,8 +28,8 @@ Function.prototype._bind = function (target) {
     let fn = this;
     let args1 = [].slice.call(arguments, 1);
     const bindClone = function () {
-        let args2 = Array.prototype.slice.call(arguments);
-        fn.call(this instanceof bindClone ? fn : target, ...args1.concat(args2));
+        const args2 = Array.prototype.slice.call(arguments);
+        return fn.call(target, ...args1.concat(args2));
     }
     let Bar = function () { }
     Bar.prototype = fn.prototype;
@@ -37,7 +38,3 @@ Function.prototype._bind = function (target) {
     bindClone.prototype = new Bar();
     return bindClone;
 }
-function test(a, b) {
-    console.info(a, b, this.name);
-}
-test._bind({ name: "sb" }, 'a', 'b')();

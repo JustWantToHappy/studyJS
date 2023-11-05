@@ -5,7 +5,7 @@ function red() {
 }
 function green() {
   console.log(new Date() * 1 - d)
-  console.log("green");P
+  console.log("green");
 }
 function yellow() {
   console.log(new Date() * 1 - d)

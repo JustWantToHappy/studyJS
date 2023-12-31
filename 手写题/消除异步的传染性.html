@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+
+<body>
+	<script>
+		const fetchData = () => fetch("https://www.fastmock.site/mock/fe2c28b3d3b8784c537210a4754d362e/api/api/image")
+		const func1 = () => {
+			const data = fetchData()
+			return data;
+		}
+		const func = () => {
+			const data = func1();
+			//打印出同步数据
+			console.info(data);
+		}
+
+		function main() {
+			func();
+		}
+
+		function run(fn) {
+			const originFetch = window.fetch;
+			//为什么要使用一个缓存数组，因为运行一次fn函数，fn函数中可能会发送多次请求，我们需要缓存所有数据
+			let cached = [];
+			let index = 0;
+			//自定义fetch函数
+			window.fetch = function (...args) {
+				if (cached[index]) {
+					if (cached[index].status === "fulfilled") {
+						return cached[index].data;
+					}
+					if (cached[index].status === "rejected") {
+						throw cached[index].error;
+					}
+				}
+				const result = {
+					status: "pending",
+					data: null,
+					error: null
+				};
+				cached[index++] = result;
+				//发送请求
+				const promise = originFetch(...args).then(res => res.json()).then(resp => {
+					result.status = "fulfilled";
+					result.data = resp;
+				}, error => {
+					result.status = "rejected";
+					result.error = error;
+				})
+				//抛出错误，此时还没有缓存数据，请求还在进行
+				throw promise;
+			}
+			try {
+				fn();
+			} catch (err) {
+				//如果是因为rejected导致的异常捕获，则不会到达此处
+				if (err instanceof Promise) {
+					const reRun = () => {
+						index = 0;
+						fn();
+					}
+					//请求如果进行完毕就重新执行一次fetch函数获取缓存
+					err.then(reRun, reRun);
+				}
+			}
+		}
+
+		run(main);
+		//main()
+	</script>
+</body>
+
+</html>

@@ -59,5 +59,3 @@ const lengthLIS=(nums)=>{
 	}
 	return maxLen;
 }
-
-console.log(lengthLIS(arr));

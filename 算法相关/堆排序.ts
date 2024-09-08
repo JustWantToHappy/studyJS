@@ -77,7 +77,13 @@ class Heap{
 		}
 		this.swap(index,lastIndex);
 		this.heap.pop();
-		this.sinkDown(index);
+		const parentIndex=this.getParentIndex(index);
+		//判断是上浮还是下沉操作
+		if(this.heap[index]>parentIndex){
+			this.siftUp(index);
+		}else{
+			this.sinkDown(index);
+		}
 		return true;
 	}
 

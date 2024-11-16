@@ -77,11 +77,12 @@ class Promise {
     const promise2 = new Promise((resolve, reject) => {
       // fulfilled 时操作，为了访问 this.value，需要保持 this
       const onFulfilledReaction = () => {
-        // 模拟异步
-        setTimeout(() => {
+        // Promise.prototype.then的回调是异步执行的，我们这里使用setTimeout实现异步
+        setTimeout(() => {	
           try {
             const x = onFullfilled(this.value) // 执行 onFullfilled
-            Promise.resolvePromise(promise2, x, resolve, reject); // 继续处理返回值的情况
+						// 继续处理返回值的情况，因为返回值有可能是当前的promise也有可能是一个新的promise的情况
+            Promise.resolvePromise(promise2, x, resolve, reject); 
           } catch (e) {
             reject(e)
           }

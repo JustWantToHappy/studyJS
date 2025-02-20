@@ -86,8 +86,8 @@ class Heap{
 		}
 		return true;
 	}
-
 	top(){
 		return this.heap[0]
 	}
 }
+

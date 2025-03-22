@@ -80,6 +80,7 @@ class SegmentTire {
 
 const segmentTire = new SegmentTire([2, 3, 1, 4, 5, 1, 6]);
 segmentTire.build();
+console.info(segmentTire.tree,'hhh')
 segmentTire.modifyInterval(3, 5, 1);
 console.info(segmentTire.tree)
 segmentTire.modifyInterval(3, 5, 2);

@@ -7,18 +7,11 @@ const flattern = (obj) => {
     let newObj = {};
 
     const getType = (obj) => Object.prototype.toString.call(obj).slice(8, -1);
-    const isNumber = (num) => getType(num) === "Number";
 
     function handleTypes(path = [], obj, key) {
-        let keyType = typeof key;
-        let valueType = typeof obj[key];
         let value = obj[key];
         let type = getType(obj[key]);
-        if (keyType === "number" && valueType === "number") {
-            let newKey = path.join(".");
-            newObj[newKey] = value;
-            return true;
-        } else if (keyType === "string" && type !== "Array" && type !== "Object") {
+			 if ( type !== "Array" && type !== "Object") {
             let newKey = path.join(".");
             newObj[newKey] = value;
             return true;
@@ -33,17 +26,18 @@ const flattern = (obj) => {
                 if (!obj.hasOwnProperty(key)) {
                     continue;
                 }
-                let type = getType(obj[key]);
-                let isnum = isNumber(key);
                 if (objType === "Array") {
-                    let arrPath = path.pop();
-                    arrPath += `[${key}]`;
-                    path.push(arrPath);
+                    path.push(`[${key}]`);
                 } else {
                     path.push(key);
                 }
-                !handleTypes(path, obj, key) && flat(obj[key], path);
-                path.pop();
+								//处理的obj[key]已经是原始类型，无需再处理了
+								const isEnd=handleTypes(path, obj, key);
+								if(isEnd){
+									path.pop();
+								}else{
+									flat(obj[key], path)
+								}
             }
         } else {
             return false;

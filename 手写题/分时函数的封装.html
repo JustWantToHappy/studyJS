@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+
+<body>
+
+</body>
+<script>
+
+	const taskHandler = (i) => {
+		const div = document.createElement("div")
+		div.innerText = i;
+		document.body.appendChild(div)
+	}
+
+	/**
+	 * 高阶函数
+	 * 调度完全由自己控制，而不是performChunk
+	 * @param {Function} task(也是个高阶函数)
+	 * */
+	const scheduler = (task) => {
+		setTimeout(() => {
+			const now = Performance.now()
+			task(() => Performance.now - now <= 10)
+		}, 1000)
+	}
+
+	/**
+ * 
+ * @param {Array<Function>|number} datas 
+ * @param {Function} taskHandler
+ * @param {Function} scheduler
+ * 
+ */
+	function performChunk(datas, taskHandler, scheduler) {
+		if (typeof datas === "number") {
+			datas = {
+				length: datas
+			}
+		}
+		if (datas.length === 0) {
+			return;
+		}
+		let i = 0;
+		/**
+		 * 开启下一个分片的执行
+		 */
+		function _run() {
+			if (i >= datas.length) {
+				return;
+			}
+			scheduler((goOn) => {
+				while (gonOn() && i < datas.length) {
+					taskHandler(data[i], i);
+					i++;
+				}
+			})
+		}
+		_run();
+	}
+</script>
+
+</html>

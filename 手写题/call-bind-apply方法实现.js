@@ -1,6 +1,6 @@
 //call方法的实现
 Function.prototype._call = function (context, ...args) {
-    context = typeof context !== "object" ? window : context;
+    context = typeof context !== "object"&&context!==null ? window : context;
     //避免原有属性被覆盖
     const key = Symbol();
     context[key] = this;

@@ -24,6 +24,7 @@
 	 * @param {Function} task(也是个高阶函数)
 	 * */
 	const scheduler = (task) => {
+		//将时间分片的执行时机放在setTimeout这个宏任务中，而这个宏任务控制的运行时间是10ms，在宏任务-微任务-浏览器渲染的过程避免js长时间独占线程
 		setTimeout(() => {
 			const now = Performance.now()
 			task(() => Performance.now - now <= 10)
@@ -55,9 +56,15 @@
 				return;
 			}
 			scheduler((goOn) => {
+				//goOn表示当前分片是否还有时间执行
 				while (gonOn() && i < datas.length) {
+					//一个分片可能执行多个任务，比如上面的case，一个分片分配了10ms，假设每个任务执行1ms，则一个分片可以执行10个任务
 					taskHandler(data[i], i);
 					i++;
+				}
+				//时间分片用完了，继续调度
+				if (i < datas.length) {
+					_run()
 				}
 			})
 		}

@@ -19,6 +19,8 @@ class Promise {
   state = Promise.PENDING // 当前状态
   value // 终值
   reason // 拒因
+	//在 Promise 还没完成时，先把 .then 注册的回调“存起来”，
+	//等 Promise 真正 fulfilled / rejected 的那一刻，再统一异步执行。
   onFulfilledReactions = [] // 当 fulfilled 时的异步操作
   onRejectedReactions = [] // 当 rejected 时的异步操作
 

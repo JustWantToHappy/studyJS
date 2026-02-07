@@ -9,7 +9,7 @@ export default function promiseAny(iterable) {
     const total = iterable.length
 
     if (total === 0) {
-      reject(new AggregateError([], 'All promises were rejected'))
+      reject(new AggregateError([]))
       return
     }
 
